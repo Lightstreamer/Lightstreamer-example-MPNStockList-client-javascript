@@ -64,6 +64,16 @@ A full local deploy of this app requires a Lightstreamer Server 7.1 or greater i
 
 * [Lightstreamer - MPN Stock-List Demo Metadata - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockListMetadata-adapter-java)
 
+You can deploy these demos to use the Lightstreamer server as Web server or in any external Web Server you are running. 
+If you choose the former case, please create the folders `<LS_HOME>/pages/[demo_name]` then copy here the contents of the `src/[demo_name]` folder of this project.<br>
+The client demos configuration assumes that Lightstreamer Server, Lightstreamer Adapters, and this client are launched on the same machine. If you need to target a different Lightstreamer server, please search this line:
+```js
+var lsClient = new LightstreamerClient(protocolToUse+"//localhost:"+portToUse,"DEMO");
+```
+in `index.js` or `index.html`, depending on the demo, and change it accordingly.<br>
+
+The demos are now ready to be launched.
+
 ## Firebase basic API
 
 Handling of the messages depends on whether the page is in the foreground or in the background.
