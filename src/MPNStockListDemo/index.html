@@ -1,0 +1,150 @@
+<!DOCTYPE html >
+
+<!--
+  LIGHTSTREAMER - www.lightstreamer.com
+  Stock-List Demo
+
+  Copyright (c) Lightstreamer Srl
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Lightstreamer :: Stock-List Demo with Web Push Notifications</title>
+  <link rel="stylesheet" type="text/css" href="css/table.css" />
+</head>
+
+<body vlink="#6c21b1" link="#0000ee" bgcolor="#ffffff" bottommargin="0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<a href="https://github.com/Lightstreamer/Lightstreamer-example-MPNStockList-client-javascript"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+<div id="wrap">
+  <table cellpadding="2" cellspacing="0" width="810" border="0">
+    <tr>
+      <td><a href="http://www.lightstreamer.com" target="_blank">
+        <img src="images/logo.png" alt="LIGHTSTREAMER" width="280" hspace="0" border="0" /></a></td>
+      <td class="demoTitle">STOCK-LIST DEMO<br/>WITH WEB PUSH NOTIFICATIONS</td>
+    </tr>
+  </table>
+
+  <br />
+
+  <form>
+
+  <!-- stocks table -->
+  <table cellpadding="2" cellspacing="0" width="1200" border="0" >
+   <tr class="tabletitle">
+      <td nowrap id="col_stock_name" width="148" style="text-align: left"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="col_stock_name_s" onclick="changeSort('stock_name');return false;" class="tabletitle">Name</a>
+        <img width="10" src="images/spacer.gif" id="img_stock_name" /></td>
+      <td nowrap id="col_last_price" width="42"><a href="#" id="col_last_price_s" onclick="changeSort('last_price');return false;" class="tabletitle" >Last</a>
+        <img width="10" src="images/spacer.gif" id="img_last_price" /></td>
+      <td nowrap id="col_time" width="64" style="text-align: center"><a href="#" id="col_time_s" onclick="changeSort('time');return false;" class="tabletitle">Time</a>
+        <img width="10" src="images/spacer.gif" id="img_time" /></td>
+      <td nowrap id="col_arrow" width="24" style="text-align: center"><a href="#" id="col_arrow_s" onclick="changeSort('pct_change');return false;" class="tabletitle">+/-</a></td>
+      <td nowrap id="col_pct_change" width="61"><a href="#" id="col_pct_change_s" onclick="changeSort('pct_change');return false;" class="tabletitle">Change</a>
+        <img width="10" src="images/spacer.gif" id="img_pct_change" /></td>
+      <td nowrap id="col_bid_quantity" width="80"><a href="#" id="col_bid_quantity_s" onclick="changeSort('bid_quantity');return false;" class="tabletitle">Bid Size</a>
+        <img width="10" src="images/spacer.gif" id="img_bid_quantity" /></td>
+      <td nowrap id="col_bid" width="50"><a href="#" id="col_bid_s" onclick="changeSort('bid');return false;" class="tabletitle">Bid</a>
+        <img width="10" src="images/spacer.gif" id="img_bid" /></td>
+      <td nowrap id="col_ask" width="50"><a href="#" id="col_ask_s" onclick="changeSort('ask');return false;" class="tabletitle">Ask</a>
+        <img width="10" src="images/spacer.gif" id="img_ask" /></td>
+      <td nowrap id="col_ask_quantity" width="80"><a href="#" id="col_ask_quantity_s" onclick="changeSort('ask_quantity');return false;" class="tabletitle">Ask Size</a>
+        <img width="10" src="images/spacer.gif" id="img_ask_quantity" /></td>
+      <td nowrap id="col_min" width="50"><a href="#" id="col_min_s" onclick="changeSort('min');return false;" class="tabletitle">Min</a>
+        <img width="10" src="images/spacer.gif" id="img_min" /></td>
+      <td nowrap id="col_max" width="50"><a href="#" id="col_max_s" onclick="changeSort('max');return false;" class="tabletitle">Max</a>
+        <img width="10" src="images/spacer.gif" id="img_max" /></td>
+      <td nowrap id="col_ref_price" width="50"><a href="#" id="col_ref_price_s" onclick="changeSort('ref_price');return false;" class="tabletitle">Ref.</a>
+        <img width="10" src="images/spacer.gif" id="img_ref_price" /></td>
+      <td nowrap id="col_open_price" width="60"><a href="#" id="col_open_price_s" onclick="changeSort('open_price');return false;" class="tabletitle">Open</a>
+        <img width="10" src="images/spacer.gif" id="img_open_price" /></td>
+      <td nowrap id="col_notify" width="60"><a href="#" id="col_notify_s" onclick="changeSort('notify');return false;" class="tabletitle">Notify</a>
+        <img width="10" src="images/spacer.gif" id="img_notify" /></td>
+    </tr>
+
+    <tr id="stocks"  data-source="lightstreamer" class="lscoldA" border="0" >
+      <td nowrap style="text-align: left">
+        <a href="#" data-source="lightstreamer" data-field="click" data-update="onclick">
+          <img src="images/popup.png" style="padding: 5px;" width="16" height="16" border="0" align="left" hspace="1" alt="Graphic Chart">
+          <div id="stockName" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12pt; color: #000000; font-weight: bold; text-align: left; padding: 5px;" data-source="lightstreamer" data-field="stock_name">Loading...</div>
+        </a>
+      </td>
+      <td><div data-source="lightstreamer" data-field="last_price">-</div></td>
+      <td><div data-source="lightstreamer" data-field="time">-</div></td>
+      <td>
+        <div>
+          <img data-source="lightstreamer" data-field="arrow" data-update="src" src="images/spacer.gif" width="20" height="8" border="0">
+        </div>
+      </td>
+      <td nowrap="nowrap"><div data-source="lightstreamer" data-field="pct_change">-</div></td>
+      <td><div data-source="lightstreamer" data-field="bid_quantity">-</div></td>
+      <td><div data-source="lightstreamer" data-field="bid">-</div></td>
+      <td><div data-source="lightstreamer" data-field="ask">-</div></td>
+      <td><div data-source="lightstreamer" data-field="ask_quantity">-</div></td>
+      <td><div data-source="lightstreamer" data-field="min">-</div></td>
+      <td><div data-source="lightstreamer" data-field="max">-</div></td>
+      <td><div data-source="lightstreamer" data-field="ref_price">-</div></td>
+      <td><div data-source="lightstreamer" data-field="open_price">-</div></td>
+      <td align="center"><input data-source="lightstreamer" data-field="notify" data-fieldtype="extra" data-update="checked" type="checkbox"><!-- Note: checkbox's onClick event is assigned during DynaGrid's onVisualUpdate event --></td>
+    </tr>
+    <tr>
+    <td colspan="14" class="simulatedDataDisc">Simulated market data.</td>
+    </tr>
+    <tr>
+      <td colspan="14" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12pt; color: #000000; background: #ffffff; font-weight: bold; text-align: right">
+        <a href="#" id="switchP2" style="color: #4c8f4c; display:none" onClick="changePage(2); return false;"> Next 15 >> </a>
+        <a href="#" id="switchP1" style="color: #4c8f4c; display:none" onClick="changePage(1); return false;"> << Previous 15 </a>
+      </td>
+    </tr>
+  </table>
+
+  </form>
+
+  <br/>
+  <button id="mpnButton" onclick="registerForMpn()" class="discMpnButton">Register for push notifications</button>
+  <br/>
+  <div id="mpnBox"></div>
+  <br/>
+	<p class="disc">
+    <b>INSTRUCTIONS</b><br />
+	<ol>
+    <li>Click the "Register for push notifications" button to allow this web app to receive push notifications. A browser prompt will appear and you should choose "Allow".</li>
+	<li>Click on any Notify checkbox to receive a push notification every time the price for that stock changes.<br>
+	<b>NOTE</b>: the stock with most updates is Ations Europe, but be ready to receive tons of notifications if you choose that...</li>
+	<li>Click on a stock name to open a popup window with streaming charts. From there you can set up another type of push notifications: insert a "high threshold" and/or "low threshold" to receive a notifications every time the stock prices crosses a threshold.</li>
+	<li>Close or hide this browser tab, but keep at least one browser window open (Chrome and Firefox only; not needed for Safari).</li>
+	<li>You will start receiving push notifications.</li>
+	<li>To unsubscribe from the notifications, reopen this web app, deselect the Notify checkboxes, and remove any threshold subscriptions.</li>
+	</ol>
+	</p>
+</div>
+
+<!-- load Firebase libraries -->
+<!-- NB keep the imports in synch with firebase-messaging-sw.js -->
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-messaging.js"></script>
+
+<!-- load Lightstreamer libraries -->
+<script src="https://unpkg.com/lightstreamer-client-web@8.0.2/lightstreamer.min.js" data-lightstreamer-ns="Ls"></script>
+
+<script src="js/env.js"></script>
+<script src="js/format.js"></script>
+<script src="js/const.js"></script>
+<script src="js/lsMpn.js"></script>
+<script src="js/index.js"></script>
+
+</body>
+
+</html>

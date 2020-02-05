@@ -1,0 +1,143 @@
+<!DOCTYPE html >
+<!--
+  LIGHTSTREAMER - www.lightstreamer.com
+  Stock-List Demo (Pop-Up Window)
+
+  Copyright (c) Lightstreamer Srl
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Lightstreamer :: Stock-List Demo - Chart</title>
+  <link rel="stylesheet" type="text/css" href="css/popup.css" />
+</head>
+
+<body vlink="#6c21b1" link="#0000ee" bgcolor="#ffffff" bottomMargin="0" leftMargin="10" topmargin="0" marginwidth="10" marginheight="0">
+<!-- <a href="https://github.com/Lightstreamer/Lightstreamer-example-StockList-client-javascript" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a> -->
+
+<form>
+
+<table>
+<tr>
+  <td width="40">
+  </td>
+  <td>
+    <!-- stock details panel -->
+    <table width="170" cellspacing="1" cellpadding="2" border="0">
+      <tr>
+        <td colspan="2" class="wintitle">
+          <div data-source="lightstreamer" data-grid="details" data-item="1" data-field="stock_name">Loading...</div>
+        </td>
+      </tr>
+      <tr>
+        <td width="70%" class="tabletitle">Last Price</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="last_price">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Last Trade</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="time">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Change</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="pct_change">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Bid Size</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="bid_quantity">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Bid</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="bid">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Ask</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="ask">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Ask Size</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="ask_quantity">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Min</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="min">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Max</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="max">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Ref. Price</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="ref_price">-</div></td>
+      </tr>
+      <tr>
+        <td class="tabletitle">Open Price</td>
+        <td class="tabledata"><div data-source="lightstreamer" data-grid="details" data-item="1" data-field="open_price">-</div></td>
+      </tr>
+    </table>
+  </td>
+  <td valign="top">
+    <!-- chart panel -->
+    <table cellspacing="1" cellpadding="2" border="0">
+      <tr>
+        <td>
+          <div id="chartstock" data-source="lightstreamer" style="height: 213px; width: 200px">
+          </div>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td width="40">
+  </td>
+  <td colspan="2">
+    <!-- threshold settings panel -->
+    <table width="270" cellspacing="1" cellpadding="2" border="0">
+      <tr>
+        <td width="95" class="thresholdtitle">Notify High Threshold</td>
+        <td width="70" class="thresholdvalue"><input id="high_thr" type="text" size="10" value="--"/></td>
+        <td class="thresholdbutton"><input id="high_thr_button" type="button" value="Add"  onClick="toggleHighThreshold(); return false;"/></td>
+      </tr>
+      <tr>
+        <td width="95" class="thresholdtitle">Notify Low Threshold</td>
+        <td width="70" class="thresholdvalue"><input id="low_thr" type="text" size="10" value="--"/></td>
+        <td class="thresholdbutton"><input id="low_thr_button" type="submit" value="Add" onClick="toggleLowThreshold(); return false;"/></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+
+</form>
+
+<!-- load Firebase libraries -->
+<!-- keep the imports in synch with index.html -->
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-messaging.js"></script>
+
+<!-- load Lightstreamer libraries -->
+<script src="https://unpkg.com/lightstreamer-client-web@8.0.2/lightstreamer.min.js" data-lightstreamer-ns="Ls"></script>
+
+<script src="js/env.js"></script>
+<script src="js/format.js"></script>
+<script src="js/const.js"></script>
+<script src="js/lsMpn.js"></script>
+<script src="js/popup.js"></script>
+
+</body>
+
+</html>
