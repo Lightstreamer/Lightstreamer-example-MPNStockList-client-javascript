@@ -13,7 +13,7 @@ This project includes different demos based on [Lightstreamer - Stock-List Demo 
 
 [![Demo ScreenShot](screen_basicstocklist_large.png)](http://demos.lightstreamer.com/MPNStockListDemo_Basic)
 
-### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://demos.lightstreamer.com/MPNStockListDemo_Basic)
+### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://demos.lightstreamer.com/MPNStockListDemo_Basic/)
 
 ### Details
 
@@ -36,7 +36,7 @@ The demo includes the following client-side functionalities:
 
 [![Demo ScreenShot](screen_stocklist_large.png)](http://demos.lightstreamer.com/MPNStockListDemo)
 
-### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://demos.lightstreamer.com/MPNStockListDemo)
+### [![](http://demos.lightstreamer.com/site/img/play.png) View live demo](https://demos.lightstreamer.com/MPNStockListDemo/)
 
 ### Details
 
