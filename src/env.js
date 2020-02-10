@@ -1,2 +1,2 @@
 
-const POPUP_URL = "http://localhost:4000/MPNStockListDemo/popup.html?item=";
+const POPUP_URL = "https://demos.lightstreamer.com/MPNStockListDemo/popup.html?item=";
