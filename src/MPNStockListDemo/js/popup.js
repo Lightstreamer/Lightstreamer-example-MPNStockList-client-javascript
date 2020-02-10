@@ -157,42 +157,45 @@ function main() {
     lsClient.subscribe(stockSubscription);
 
     // Register the MPN device
-    registerMpnDevice(function(item, notificationFormat, triggerExpression) {
-
-        // Subscription enumerator: look for subscriptions
-        // for this item and with a trigger expression
-        if ((item == itemName) && (triggerExpression != null)) {
-
-            // Extract the trigger direction and threshold
-            // from the trigger expression
-            var regex= /.* ([<>]) (\d+\.?\d*)/g;
-            var matches= regex.exec(triggerExpression);
-            if (matches != null) {
-                var dir= matches[1];
-                var threshold= matches[2];
-
-                if (dir == ">") {
-                    var field= document.getElementById("high_thr");
-                    var button= document.getElementById("high_thr_button");
-
-                    field.value= threshold;
-                    field.disabled= true;
-                    button.value= "Remove";
-
-                } else if (dir == "<") {
-                    var field= document.getElementById("low_thr");
-                    var button= document.getElementById("low_thr_button");
-
-                    field.value= threshold;
-                    field.disabled= true;
-                    button.value= "Remove";
-
+    getDeviceToken()
+    .then(function(token) {
+        return doRegister(token, function(item, notificationFormat, triggerExpression) {
+            
+            // Subscription enumerator: look for subscriptions
+            // for this item and with a trigger expression
+            if ((item == itemName) && (triggerExpression != null)) {
+                
+                // Extract the trigger direction and threshold
+                // from the trigger expression
+                var regex= /.* ([<>]) (\d+\.?\d*)/g;
+                var matches= regex.exec(triggerExpression);
+                if (matches != null) {
+                    var dir= matches[1];
+                    var threshold= matches[2];
+                    
+                    if (dir == ">") {
+                        var field= document.getElementById("high_thr");
+                        var button= document.getElementById("high_thr_button");
+                        
+                        field.value= threshold;
+                        field.disabled= true;
+                        button.value= "Remove";
+                        
+                    } else if (dir == "<") {
+                        var field= document.getElementById("low_thr");
+                        var button= document.getElementById("low_thr_button");
+                        
+                        field.value= threshold;
+                        field.disabled= true;
+                        button.value= "Remove";
+                        
+                    } else
+                        console.log("Unknown threshold direction on MPN subscription for " + item + ": " + triggerExpression);
+                    
                 } else
-                    console.log("Unknown threshold direction on MPN subscription for " + item + ": " + triggerExpression);
-
-            } else
-                console.log("Unknown trigger on MPN subscription for " + item + ": " + triggerExpression);
-        }
+                    console.log("Unknown trigger on MPN subscription for " + item + ": " + triggerExpression);
+            }
+        });
     });
     
     lsClient.connect();

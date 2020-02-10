@@ -235,21 +235,39 @@ function main() {
     document.getElementById("switchP2").style.display = "";
     
     lsClient.connect();
+    
+    if (!("Notification" in window)) {
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+        document.getElementById("mpnBox").className = "discMpnBoxError";
+        document.getElementById("mpnBox").innerHTML = "This browser does not support desktop notification";
+    }
+    else if (Notification.permission === "denied") {
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+        document.getElementById("mpnBox").className = "discMpnBoxError";
+        document.getElementById("mpnBox").innerHTML = "You have disabled the notifications. Please, enable them and reload the page.";
+    }
+    else if (Notification.permission === "granted") {
+        register();
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+    }
 }
 
 //////////////// MPN Device Registration
 
-function registerForMpn() {
+function register() {
     document.getElementById("mpnButton").className = "discMpnButtonDisabled";
     document.getElementById("mpnBox").className = "discMpnBoxOk";
     document.getElementById("mpnBox").innerHTML = "Registering...";
     
-    // Register the MPN device
-    registerMpnDevice(updateNotifyFlag)
-    .then(() => {
+    getDeviceToken()
+    .then(function(token) {
+        return doRegister(token, updateNotifyFlag);
+    })
+    .then(function() {
         document.getElementById("mpnBox").className = "discMpnBoxOk";
         document.getElementById("mpnBox").innerHTML = "You can now register individual stock prices by flagging the Notify checkboxes above.";
-    }, (error) => {
+    })
+    .catch(function(error) {
         document.getElementById("mpnBox").className = "discMpnBoxError";
         document.getElementById("mpnBox").innerHTML = error;
     });
@@ -309,15 +327,3 @@ function updateNotifyFlag(item, notificationFormat, triggerExpression) {
 }
 
 main();
-if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-}
-else if (Notification.permission === "granted") {
-    registerForMpn();
-    document.getElementById("mpnButton").className = "discMpnButtonDisabled";
-}
-else if (Notification.permission === "denied") {
-    document.getElementById("mpnButton").className = "discMpnButtonDisabled";
-    document.getElementById("mpnBox").className = "discMpnBoxError";
-    document.getElementById("mpnBox").innerHTML = "You have disabled the notifications. Please, enable them and reload the page.";
-}

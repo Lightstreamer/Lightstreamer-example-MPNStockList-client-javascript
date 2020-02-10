@@ -19,107 +19,45 @@ var mpnDevice= null;
 
 //////////////// MPN Device Creation and Registration
 
-function registerMpnDevice(subscriptionEnumerator) {
-    if (mpnDevice != null) {
-        return Promise.reject("MPN device already registered");
-    }
-
-    if (!("Notification" in window)) {
-        return Promise.reject("This browser does not support desktop notification");
-    }
-    else if (Notification.permission === "granted") {
-        return doRegisterMpnDevice(subscriptionEnumerator);
-    }
-    else if (Notification.permission !== "denied") {
-        return Notification.requestPermission().then(function (permission) {
-            if (permission === "granted") {
-                return doRegisterMpnDevice(subscriptionEnumerator);
-            } else {
-                return Promise.reject("Push notification permissions denied");
-            }
-        });
-    }
-    else {
-        return Promise.reject("Push notification permissions denied");
-    }
-}
-
-function doRegisterMpnDevice(subscriptionEnumerator) {
+function getDeviceToken() {
     return new Promise((resolve, reject) => {
-
-        // Prepare the MPN device listener: its purpose is to update the item's
-        // Notify button status whenever an MPN subscription for that item is
-        // activated or deactivated
-        var mpnDeviceListener= {
-                onRegistered: function() {
-                    console.log("MPN device registered successfully");
-                    resolve();
-                },
-
-                onRegistrationFailed: function(code, message) {
-                    reject("MPN device registration failed: " + code + ", " + message);
-                },
-
-                onSubscriptionsUpdated: function() {
-                    var mpnSubscriptions= lsClient.getMpnSubscriptions();
-
-                    console.log("MPN subscriptions updated: " + mpnSubscriptions.length + " active MPN subscriptions");
-
-                    // Update the Notify button status
-                    var i= 0;
-                    for (i= 0; i < mpnSubscriptions.length; i++) {
-                        var mpnSubscription= mpnSubscriptions[i];
-                        var item= mpnSubscription.getItemGroup();
-                        var notificationFormat= mpnSubscription.getNotificationFormat();
-                        var triggerExpression= mpnSubscription.getTriggerExpression();
-
-                        // Call the subscription enumerator
-                        subscriptionEnumerator(item, JSON.parse(notificationFormat), triggerExpression);
-                    }
-                }
-        };
-
+        
         // Check if we are on Safari, if not we assume we are on Chrome or Firefox
         if (window.safari != undefined) {
             console.log("Requesting device token for Safari...");
-
+            
             // Prepare permission callback
             var checkRemotePermission= function(permissionData) {
                 if (permissionData.permission === 'default') {
-
+                    console.log("Safari push notification permissions requested");
+                    
                     // Request permissions, the callback is this same function
                     window.safari.pushNotification.requestPermission(APPLE_WEB_SERVICE_URL, APPLE_WEBSITE_PUSH_ID, APPLE_USER_INFO, checkRemotePermission);
-
-                } else if (permissionData.permission === 'denied') {
+                } 
+                else if (permissionData.permission === 'denied') {
                     console.log("Safari push notification permissions denied");
+                    
                     reject("Push notification permissions denied");
-
-                } else if (permissionData.permission === 'granted') {
+                } 
+                else if (permissionData.permission === 'granted') {
                     console.log("Safari push notification permissions granted, token: " + permissionData.deviceToken);
-
-                    // Create the MPN device
-                    mpnDevice= new MpnDevice(permissionData.deviceToken, APPLE_APP_ID, 'Apple');
-
-                    // Add the MPN device listener
-                    mpnDevice.addListener(mpnDeviceListener);
-
-                    // Register the MPN device
-                    lsClient.registerForMpn(mpnDevice);
+                    
+                    resolve(permissionData.deviceToken);
                 }
             };
 
             // Check permissions to send push notifications
             var permissionData= window.safari.pushNotification.permission(APPLE_WEBSITE_PUSH_ID);
             checkRemotePermission(permissionData);
-
-        } else {
+        }
+        else {
             console.log("Requesting device token for Chrome/Firefox via Firebase Messaging...");
-
+            
             // Initialize Firebase, its instance is needed to create the MPN device
-            var firebaseApp= firebase.initializeApp(FIREBASE_CONFIG);
+            var firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
 
             // Get the Firebase Messaging instance and configure the VAPID key
-            var messaging= firebaseApp.messaging();
+            var messaging = firebaseApp.messaging();
             messaging.usePublicVapidKey(FIREBASE_VAPID_KEY);
 
             // Set the foreground notification event
@@ -127,30 +65,83 @@ function doRegisterMpnDevice(subscriptionEnumerator) {
                 console.log("Received foreground MPN", payload);
             });
 
-            messaging.getToken().then(function(currentToken) {
-                if (currentToken) {
-                    console.log("Chrome/Firefox push notification permissions granted, token: " + currentToken);
-
-                    // Create the MPN device
-                    mpnDevice= new Ls.MpnDevice(currentToken, FIREBASE_APP_ID, 'Google');
-
-                    // Add the MPN device listener
-                    mpnDevice.addListener(mpnDeviceListener);
-
-                    // Register the MPN device
-                    lsClient.registerForMpn(mpnDevice);
-
-                } else {
-                    console.log("Chrome/Firefox push notification permissions denied");
+            Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                    messaging.getToken().then(function(currentToken) {
+                        if (currentToken) {
+                            console.log("Chrome/Firefox push notification permissions granted, token: " + currentToken);
+                            
+                            resolve(currentToken);
+                        } 
+                        else {
+                            console.log("Chrome/Firefox push notification permissions denied");
+                            
+                            reject("Push notification permissions denied");
+                        }
+                    }).catch(function(err) {
+                        console.log("Chrome/Firefox push notification permissions request failed", err);
+                        
+                        reject(err);
+                    });
+                }
+                else {
+                    console.log("Push notification permissions denied");
+                    
                     reject("Push notification permissions denied");
                 }
-
-            }).catch(function(err) {
-                console.log("Chrome/Firefox push notification permissions request failed", err);
-                reject(err);
             });
         }
+    });
+}
 
+function doRegister(token, subscriptionEnumerator) {
+    return new Promise((resolve, reject) => {
+        
+        // Prepare the MPN device listener: its purpose is to update the item's
+        // Notify button status whenever an MPN subscription for that item is
+        // activated or deactivated
+        var mpnDeviceListener= {
+                onRegistered: function() {
+                    console.log("MPN device registered successfully");
+                    
+                    resolve();
+                },
+                
+                onRegistrationFailed: function(code, message) {
+                    console.log("MPN device registration failed: " + code + ", " + message);
+                    
+                    reject("MPN device registration failed: " + code + ", " + message);
+                },
+                
+                onSubscriptionsUpdated: function() {
+                    var mpnSubscriptions= lsClient.getMpnSubscriptions();
+                    
+                    console.log("MPN subscriptions updated: " + mpnSubscriptions.length + " active MPN subscriptions");
+                    
+                    // Update the Notify button status
+                    var i= 0;
+                    for (i= 0; i < mpnSubscriptions.length; i++) {
+                        var mpnSubscription= mpnSubscriptions[i];
+                        var item= mpnSubscription.getItemGroup();
+                        var notificationFormat= mpnSubscription.getNotificationFormat();
+                        var triggerExpression= mpnSubscription.getTriggerExpression();
+                        
+                        // Call the subscription enumerator
+                        subscriptionEnumerator(item, JSON.parse(notificationFormat), triggerExpression);
+                    }
+                }
+        };
+        
+        // Create the MPN device
+        var appId = window.safari ? APPLE_APP_ID : FIREBASE_APP_ID;
+        var platform = window.safari ? 'Apple' : 'Google';
+        mpnDevice = new Ls.MpnDevice(token, appId, platform);
+        
+        // Add the MPN device listener
+        mpnDevice.addListener(mpnDeviceListener);
+        
+        // Register the MPN device
+        lsClient.registerForMpn(mpnDevice);
     });
 }
 

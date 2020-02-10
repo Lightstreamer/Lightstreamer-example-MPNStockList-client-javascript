@@ -53,44 +53,51 @@ function main() {
     };
     
     lsClient.connect();
+    
+    if (!("Notification" in window)) {
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+        document.getElementById("mpnBox").className = "discMpnBoxError";
+        document.getElementById("mpnBox").innerHTML = "This browser does not support desktop notification";
+    }
+    else if (Notification.permission === "denied") {
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+        document.getElementById("mpnBox").className = "discMpnBoxError";
+        document.getElementById("mpnBox").innerHTML = "You have disabled the notifications. Please, enable them and reload the page.";
+    }
+    else if (Notification.permission === "granted") {
+        register();
+        document.getElementById("mpnButton").className = "discMpnButtonDisabled";
+    }
 }
 
 
 //////////////// MPN Device Registration
 
-function registerForMpn() {
+function register() {
     document.getElementById("mpnButton").className = "discMpnButtonDisabled";
     document.getElementById("mpnBox").className = "discMpnBoxOk";
     document.getElementById("mpnBox").innerHTML = "Registering...";
-
-    // Register the MPN device
-    registerMpnDevice(function(item, notificationFormat, triggerExpression) {
-
-        // Subscription enumerator: set the check button,
-        // but only for subscriptions with no trigger
-        // (the others are handled in the standard demo)
-        if (triggerExpression == null)
-            stocksGrid.updateRow(item, { "notify": true });
+    
+    getDeviceToken()
+    .then(function(token) {
+        return doRegister(token, subscriptionEnumerator);
     })
-    .then(() => {
+    .then(function() {
         document.getElementById("mpnBox").className = "discMpnBoxOk";
         document.getElementById("mpnBox").innerHTML = "You can now register individual stock prices by flagging the Notify checkboxes above.";
-    }, (error) => {
+    })
+    .catch(function(error) {
         document.getElementById("mpnBox").className = "discMpnBoxError";
         document.getElementById("mpnBox").innerHTML = error;
     });
 }
 
+function subscriptionEnumerator(item, notificationFormat, triggerExpression) {
+    // Subscription enumerator: set the check button,
+    // but only for subscriptions with no trigger
+    // (the others are handled in the standard demo)
+    if (triggerExpression == null)
+        stocksGrid.updateRow(item, { "notify": true });
+}
+
 main();
-if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-}
-else if (Notification.permission === "granted") {
-    registerForMpn();
-    document.getElementById("mpnButton").className = "discMpnButtonDisabled";
-}
-else if (Notification.permission === "denied") {
-    document.getElementById("mpnButton").className = "discMpnButtonDisabled";
-    document.getElementById("mpnBox").className = "discMpnBoxError";
-    document.getElementById("mpnBox").innerHTML = "You have disabled the notifications. Please, enable them and reload the page.";
-}
