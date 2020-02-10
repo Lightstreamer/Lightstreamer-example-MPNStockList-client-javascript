@@ -19,7 +19,7 @@ const FIREBASE_APP_ID = "com.lightstreamer.demo.android.fcm";
 const APPLE_APP_ID = "web.com.lightstreamer.demo";
 
 // Project parameters for Safari
-const APPLE_WEB_SERVICE_URL= "https://" + LS_HOST + ":" + LS_HTTPS_PORT + "/apple_web_service";
+const APPLE_WEB_SERVICE_URL= "https://" + LS_HOST + ((LS_HTTPS_PORT != 443) ? (":" + LS_HTTPS_PORT) : "") + "/apple_web_service";
 const APPLE_WEBSITE_PUSH_ID= "web.com.lightstreamer.demo";
 const APPLE_USER_INFO= { };
 
