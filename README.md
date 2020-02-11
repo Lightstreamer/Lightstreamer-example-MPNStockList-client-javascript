@@ -64,7 +64,7 @@ A full local deploy of this app requires a Lightstreamer Server 7.1 or greater i
 
 * [Lightstreamer - MPN Stock-List Demo Metadata - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-MPNStockListMetadata-adapter-java)
 
-You can deploy these demos to use the Lightstreamer server as Web server or in any external Web Server you are running. 
+You can deploy these demos to use the Lightstreamer server as Web server or in any external Web Server you are running.
 If you choose the former case, please create the folders `<LS_HOME>/pages/[demo_name]` then copy here the contents of the `src/[demo_name]` folder of this project.<br>
 The client demos configuration assumes that Lightstreamer Server, Lightstreamer Adapters, and this client are launched on the same machine. If you need to target a different Lightstreamer server, please search this line:
 ```js
@@ -84,7 +84,7 @@ importScripts('https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.7.0/firebase-messaging.js');
 
 firebase.initializeApp({
-    // Firebase configurations  
+    // Firebase configurations
 });
 
 const messaging = firebase.messaging();
@@ -118,9 +118,65 @@ messaging.setBackgroundMessageHandler(function(payload) {
 For further information, consult the [Firebase docs](https://firebase.google.com/docs/cloud-messaging/js/receive).
 
 
-## APNS basic API
+## Safari Push Notifications basic API
 
-TODO
+Handling push notifications for Safari is a zero-code matter, since they are received and displayed directly
+by the macOS operating system. In fact, they are shown whatever the state of the web application is at the moment
+they are delivered: foreground, background, or even when Safari is completely closed.
+
+The authorization process, though, can be tricky and requires configuring an appropriate *push package file*
+on the Server, which Safari requests and matches with the web application. Only if they match, Safari asks
+the user it they permit push notifications or not.
+
+Typically, your code for the authorization process starts by distinguishing the Safari case from the Firebase case,
+preparing the permissions API callback and finally checking for existing permissions:
+
+```javascript
+if (window.safari != undefined) {
+
+  // Safari case, prepare the permissions API callback
+  var checkRemotePermission = function(permissionData) {
+    if (permissionData.permission === 'default') {
+
+      // Request permissions, the callback is this same function
+      window.safari.pushNotification.requestPermission(
+        WEB_SERVICE_URL,
+        WEBSITE_PUSH_ID,
+        USER_INFO,
+        checkRemotePermission);
+
+    } else if (permissionData.permission === 'denied') {
+
+      // Either the user denied permissions or there is a mismatch with push package file
+      alert("Push notification permissions denied");
+
+    } else if (permissionData.permission === 'granted') {
+
+      // The user granted permissions
+      alert("Push notification permissions granted");
+    }
+  };
+
+  // Check permissions to send push notifications
+  var permissionData = window.safari.pushNotification.permission(APPLE_WEBSITE_PUSH_ID);
+  checkRemotePermission(permissionData);
+
+} else {
+
+  // Firebase case, see previous sections
+  [...]
+}
+```
+
+Remember that requesting for permissions must be done in a user-driven event, such as
+the click of a button, or permissions are denied automatically.
+
+For further information:
+* The `lsMpn.js` file contains a full example of the authorization process.
+* The *General Concepts* document contains a detailed explanation on how to configure
+  the Server for push notifications on Safari, including how to prepare the push package file.
+* Full documentation of Safari Push Notifications API can be found on the [Apple developer website](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/NotificationProgrammingGuideForWebsites/PushNotifications/PushNotifications.html).
+
 
 ## See Also
 
