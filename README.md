@@ -76,6 +76,40 @@ The demos are now ready to be launched.
 
 ## Firebase basic API
 
+The basic workflow of a Firebase application starts by requesting permission from the user for the current origin to display notifications.
+The method `Notification.requestPermission()` returns a `Promise` that resolves to a string.
+Its possible values are: `granted`, `denied` or `default`.
+
+The following example shows a typical pattern:
+
+```javascript
+Notification.requestPermission().then(function (permission) {
+    if (permission === "granted") {
+        // We have the permission to show notifications
+    } else {
+        // We don't have the permission
+    }
+});
+```
+
+When we have the permission, we can ask a token to communicate with the Firebase services.
+But before, we need to initialize Firebase:
+
+```javascript
+// Initialize Firebase, its instance is needed to create the MPN device
+var firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+
+// Get the Firebase Messaging instance and configure the VAPID key
+var messaging = firebaseApp.messaging();
+messaging.usePublicVapidKey(FIREBASE_VAPID_KEY);
+
+messaging.getToken().then(function(currentToken) {
+    if (currentToken) {
+        // Here is the token
+    }
+});
+```
+
 Handling of the messages depends on whether the page is in the foreground or in the background.
 In any cases, the first step is to create a service worker in the file `firebase-messaging-sw.js`.
 
@@ -115,8 +149,11 @@ messaging.setBackgroundMessageHandler(function(payload) {
 ```
 (see `firebase-messaging-sw.js` for the complete code)
 
-For further information, consult the [Firebase docs](https://firebase.google.com/docs/cloud-messaging/js/receive).
-
+For further information:
+* The `lsMpn.js` file contains a full example of the authorization process.
+* The *General Concepts* document contains a detailed explanation on how to configure the Server for push notifications with Firebase.
+* Full documentation of Firebase Push Notifications API can be found on [Firebase docs](https://firebase.google.com/docs/cloud-messaging/js/receive).
+* Chrome/Firefox Notifications API are explained [here](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API).
 
 ## Safari Push Notifications basic API
 
