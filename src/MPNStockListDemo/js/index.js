@@ -268,6 +268,7 @@ function register() {
         document.getElementById("mpnBox").innerHTML = "You can now register individual stock prices by flagging the Notify checkboxes above.";
     })
     .catch(function(error) {
+        document.getElementById("mpnButton").className = "discMpnButton";
         document.getElementById("mpnBox").className = "discMpnBoxError";
         document.getElementById("mpnBox").innerHTML = error;
     });
