@@ -15,7 +15,7 @@
 */
 
 // Service identifiers from Lightstreamer google_notifier_conf.xml and apple_notifier_conf.xm
-const FIREBASE_APP_ID = "com.lightstreamer.demo.android.fcm";
+const FIREBASE_APP_ID = "com.lightstreamer.push_demo.android.fcm";
 const APPLE_APP_ID = "web.com.lightstreamer.demo";
 
 // Project parameters for Safari
