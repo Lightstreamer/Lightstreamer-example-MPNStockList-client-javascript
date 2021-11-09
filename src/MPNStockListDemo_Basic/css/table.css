@@ -18,14 +18,16 @@
  */
 .demoTitle {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 14pt;
   color: #000000;
   font-weight: bold;
-  /*text-align: right;*/
+  display: inline-block;
+}
+.tableContainer {
+  overflow-x:auto;
+  margin-top: 1em;
 }
 .tableTitle {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 14px;
   color: #ffffff;
   background-color: #828282;
   text-align: right;
@@ -36,7 +38,6 @@
 .disc, li { 
 	margin-top: 5px;
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-	font-size: 12pt;
 	color: #000000; 
 	background: #ffffff;
 	font-weight: normal; 
@@ -45,7 +46,6 @@
 .simulatedDataDisc { 
     margin-top: 5px;
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 12px;
     color: #000000; 
     background: #ffffff;
     font-weight: normal; 
@@ -53,7 +53,6 @@
 }
 .discMpnButton {
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 17px;
     background-color:  #4c8f4c;
     cursor: pointer;
     font-weight: normal;
@@ -65,7 +64,6 @@
 }
 .discMpnButtonDisabled {
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 17px;
     background-color:  #4c8f4c;
     font-weight: normal;
     display: block; 
@@ -79,7 +77,6 @@
 }
 .discMpnBoxOk {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 12pt;
     font-weight: normal;
     text-align: center;
     color:  #4c8f4c;
@@ -87,7 +84,6 @@
 }
 .discMpnBoxError {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 12pt;
     font-weight: normal;
     text-align: center;
     color:  #FF0000;
@@ -95,7 +91,6 @@
 }
 .stockNameOdd {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 12pt;
   color: #000000;
   background-color:  #efefef;
   font-weight: bold;
@@ -104,7 +99,6 @@
 }
 .stockNameEven {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 12pt;
   color: #000000;
   background-color: #dedede;
   font-weight: bold;
@@ -113,7 +107,6 @@
 }
 .coldOdd {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 12pt;
   color: #000000;
   background-color:  #efefef;
   font-weight: normal;
@@ -121,13 +114,11 @@
 }
 .coldEven {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 12pt;
   color: #000000;
   background-color: #dedede;
   font-weight: normal;
   text-align: right;
 }
 #wrap {
-  width: 1200px;
   margin: 0 auto;
 }

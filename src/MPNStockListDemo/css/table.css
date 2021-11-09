@@ -18,14 +18,16 @@
  */
 .demoTitle {
   font-family: Verdana, Arial, Helvetica, Sans-serif;
-  font-size: 14pt;
   color: #000000;
   font-weight: bold;
-  /*text-align: right;*/
+  display: inline-block;
+}
+.tableContainer {
+  overflow-x:auto;
+  margin-top: 1em;
 }
 .tabletitle {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 14px;
   color: #ffffff;
   background: #828282;
   text-align: right;
@@ -35,14 +37,12 @@
 }
 .tableTitleSorted {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 14px;
   color: #ffffff;
   background: #525252;
   text-align: right;
 }
 .note {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #333333;
   font-weight: normal;
   text-align: left;
@@ -51,7 +51,6 @@
 .disc, li {
 	margin-top: 5px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12pt;
 	color: #000000;
 	background: #ffffff;
 	font-weight: normal;
@@ -60,7 +59,6 @@
 .simulatedDataDisc {
     margin-top: 5px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 12px;
     color: #000000;
     background: #ffffff;
     font-weight: normal;
@@ -68,7 +66,6 @@
 }
 .discMpnButton {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 17px;
     background-color:  #4c8f4c;
     cursor: pointer;
     font-weight: normal;
@@ -80,7 +77,6 @@
 }
 .discMpnButtonDisabled {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 17px;
     background-color:  #4c8f4c;
     font-weight: normal;
     display: block; 
@@ -94,7 +90,6 @@
 }
 .discMpnBoxOk {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 12pt;
     font-weight: normal;
     text-align: center;
     color:  #4c8f4c;
@@ -102,7 +97,6 @@
 }
 .discMpnBoxError {
     font-family: Verdana, Arial, Helvetica, sans-serif; 
-    font-size: 12pt;
     font-weight: normal;
     text-align: center;
     color:  #FF0000;
@@ -110,7 +104,6 @@
 }
 .stocknameA {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #000080;
   background: #efefef;
   font-weight: bold;
@@ -118,7 +111,6 @@
 }
 .stocknameB {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #000080;
   background: #dedede;
   font-weight: bold;
@@ -126,14 +118,12 @@
 }
 .lscold {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #000000;
   font-weight: normal;
   text-align: right;
 }
 .lscoldA {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #000000;
   background: #efefef;
   font-weight: normal;
@@ -141,7 +131,6 @@
 }
 .lscoldB {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   color: #000000;
   background: #dedede;
   font-weight: normal;
@@ -149,14 +138,12 @@
 }
 .lscoldColA {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   background: #efefef;
   font-weight: bold;
   text-align: right;
 }
 .lscoldColB {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 12pt;
   background: #dedede;
   font-weight: bold;
   text-align: right;
@@ -168,7 +155,6 @@
   background: green;
 }
 #wrap {
-  width: 1200px;
   margin: 0 auto;
 }
 tr:nth-child(2n+2) {
