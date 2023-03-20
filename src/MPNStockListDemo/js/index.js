@@ -204,7 +204,7 @@ function main() {
     subsItemList1.addListener(dynaGrid);
     subsItemList1.setDataAdapter("QUOTE_ADAPTER");
     subsItemList1.setRequestedSnapshot("yes");
-    subsItemList1.setRequestedMaxFrequency(1);
+    subsItemList1.setRequestedMaxFrequency("1");
     subsItemList1.addListener({
         onSubscription: function() {
             console.log("Subscription completed for item list of page 1");
@@ -218,7 +218,7 @@ function main() {
     subsItemList2.addListener(dynaGrid);
     subsItemList2.setDataAdapter("QUOTE_ADAPTER");
     subsItemList2.setRequestedSnapshot("yes");
-    subsItemList2.setRequestedMaxFrequency(1);
+    subsItemList2.setRequestedMaxFrequency("1");
     subsItemList2.addListener({
         onSubscription: function() {
             console.log("Subscription completed for item list of page 2");

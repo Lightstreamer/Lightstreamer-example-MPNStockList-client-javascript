@@ -199,7 +199,7 @@ function toggleMpnSubscription(item, errorHandler) {
                 "New price is ${last_price}");
 
         // Prepare the MPN subscription
-        mpnSubscription= new Ls.MpnSubscription("MERGE", item, ["stock_name", "last_price"]);
+        mpnSubscription= new Ls.MpnSubscription("MERGE", [item], ["stock_name", "last_price"]);
         mpnSubscription.setNotificationFormat(notificationFormat);
         mpnSubscription.setDataAdapter("QUOTE_ADAPTER");
 
@@ -291,7 +291,7 @@ function toggleMpnSubscriptionWithTrigger(item, dir, threshold, errorHandler) {
                 "New price is ${last_price}");
 
         // Prepare the MPN subscription
-        mpnSubscription= new Ls.MpnSubscription("MERGE", item, ["stock_name", "last_price"]);
+        mpnSubscription= new Ls.MpnSubscription("MERGE", [item], ["stock_name", "last_price"]);
         mpnSubscription.setNotificationFormat(notificationFormat);
         mpnSubscription.setTriggerExpression(trigger);
         mpnSubscription.setDataAdapter("QUOTE_ADAPTER");
